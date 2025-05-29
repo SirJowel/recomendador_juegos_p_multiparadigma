@@ -1,0 +1,13 @@
+{% extends 'game_recomender/base.html' %}
+{% block content %}
+<div class="login-container" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 60vh;">
+    <div style="background: #23272e; padding: 40px 30px; border-radius: 12px; box-shadow: 0 2px 12px #0008; text-align: center;">
+        <img src="https://store.cloudflare.steamstatic.com/public/shared/images/header/logo_steam.svg?t=962016" alt="Steam Logo" style="width: 120px; margin-bottom: 20px;">
+        <h2 style="color: #66c0f4; margin-bottom: 18px;">Iniciar sesión con Steam</h2>
+        <p style="color: #b8b6b4; margin-bottom: 30px;">Accede para ver tu perfil y tu biblioteca de juegos de Steam.</p>
+        <a href="{% url 'steam_login' %}" class="steam-login-btn" style="display: inline-block;">
+            <img src="https://steamcommunity-a.akamaihd.net/public/images/signinthroughsteam/sits_01.png" alt="Iniciar sesión con Steam" style="width: 220px; transition: transform 0.2s; border-radius: 6px; box-shadow: 0 2px 8px #0006;">
+        </a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,120 @@
+{% extends 'game_recomender/base.html' %}
+
+{% block content %}
+    <div class="header">
+        {% if perfil.avatar %}
+        <img src="{{ perfil.avatarfull }}" alt="Avatar" class="avatar">
+        {% endif %}
+        <div>
+            <h1>{{ perfil.nombre }}</h1>
+            <p>Estado: {% if perfil.personastate == 1 %}En línea{% else %}Desconectado{% endif %}</p>
+            <a href="{{ perfil.profileurl }}" target="_blank" class="perfil-link">Ver perfil en Steam</a>
+        </div>
+    </div>
+
+    <!-- Nueva sección de información del perfil -->
+    <div class="section">
+        <h2>📝 Información del Perfil</h2>
+        <div class="info-perfil">
+            <div class="info-columna">
+                <div class="info-item">
+                    <span class="info-label">Nombre Usuario:</span>
+                    <div class="info-valor">{{ perfil.personaname }}</div>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">País:</span>
+                    <div class="info-valor">
+                        {% if perfil.loccountrycode %}
+                            {{ perfil.loccountrycode }}
+                        {% else %}
+                            No especificado
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Estado/Provincia:</span>
+                    <div class="info-valor">
+                        {% if perfil.locstatecode %}
+                            {{ perfil.locstatecode }}
+                        {% else %}
+                            No especificado
+                        {% endif %}
+
+                    </div>
+                </div>
+            </div>
+            <div class="info-columna">
+                <div class="info-item">
+                    <span class="info-label">Cuenta creada:</span>
+                    <div class="info-valor">{{ perfil.fecha_creacion|default:"Desconocida" }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+        <!-- Resto del código para la biblioteca permanece igual -->
+<div class="section">
+        <h2>🎮 Mi Biblioteca de Juegos</h2>
+        <div id="juegos-container">
+            {% for juego in juegos %}
+            <div class="juego-item" style="display: none;">
+                <img src="https://cdn.cloudflare.steamstatic.com/steam/apps/{{ juego.appid }}/capsule_184x69.jpg"
+                     alt="{{ juego.name }}" class="juego-imagen">
+                <div class="juego-info">
+                    <h3>{{ juego.name }}</h3>
+                    <p>Tiempo jugado: {{ juego.playtime_hours }} horas</p>
+                    <p><b>Géneros:</b> {{ juego.genre }}</p>
+                    <p><b>Tags:</b> {{ juego.popular_tags }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div style="text-align:center; margin: 20px 0;">
+            <button onclick="cambiarPagina(-1)">Anterior</button>
+            <span id="pagina-actual">1</span>
+            <button onclick="cambiarPagina(1)">Siguiente</button>
+        </div>
+        <script>
+            const juegos = document.querySelectorAll('.juego-item');
+            const juegosPorPagina = 10;
+            let pagina = 1;
+            function mostrarPagina(n) {
+                let totalPaginas = Math.ceil(juegos.length / juegosPorPagina);
+                if (n < 1) n = 1;
+                if (n > totalPaginas) n = totalPaginas;
+                pagina = n;
+                for (let i = 0; i < juegos.length; i++) {
+                    juegos[i].style.display = (i >= (pagina-1)*juegosPorPagina && i < pagina*juegosPorPagina) ? '' : 'none';
+                }
+                document.getElementById('pagina-actual').innerText = pagina;
+            }
+            function cambiarPagina(delta) {
+                mostrarPagina(pagina + delta);
+            }
+            // Mostrar la primera página al cargar
+            mostrarPagina(1);
+        </script>
+    </div>
+
+    <div class="section">
+        <h2>✨ Recomendaciones de Juegos para Ti</h2>
+        {% if recomendaciones %}
+            {% for juego in recomendaciones %}
+            <div class="juego">
+                <img src="https://cdn.cloudflare.steamstatic.com/steam/apps/{{ juego.appid }}/capsule_184x69.jpg"
+                alt="{{ juego.name }}"
+                class="juego-imagen">
+                <div class="juego-info">
+                    <h3>{{ juego.name }}</h3>
+                    <p><b>Géneros:</b> {{ juego.genre }}</p>
+                    <p><b>Tags:</b> {{ juego.popular_tags }}</p>
+                    <p>{{ juego.desc_snippet }}</p>
+                    <a href="{{ juego.url }}" target="_blank" class="perfil-link">Ver en Steam</a>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p>No hay recomendaciones disponibles en este momento.</p>
+        {% endif %}
+    </div>
+
+{% endblock %}

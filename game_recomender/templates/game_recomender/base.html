@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Steam Dashboard</title>
+    <style>
+        :root {
+            --primary: #66c0f4;
+            --primary-dark: #1b2838;
+            --secondary: #2a475e;
+            --accent: #c5c3c2;
+            --dark: #171a21;
+            --success: #5ba32b;
+            --danger: #a74343;
+            --highlight: rgba(102, 192, 244, 0.2);
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', 'Roboto', 'Oxygen', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--primary-dark);
+            color: #fff;
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(102, 192, 244, 0.15) 0%, transparent 20%),
+                radial-gradient(circle at 80% 70%, rgba(102, 192, 244, 0.15) 0%, transparent 20%);
+            min-height: 100vh;
+        }
+        
+        /* Barra de navegación estilo gaming */
+        .navbar {
+            background: linear-gradient(145deg, #171a21 0%, #0e1117 100%);
+            padding: 15px 0;
+            display: flex;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+            position: relative;
+            z-index: 100;
+            border-bottom: 1px solid rgba(102, 192, 244, 0.2);
+        }
+        
+        .navbar::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent 0%, var(--primary) 50%, transparent 100%);
+        }
+        
+        .navbar a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: bold;
+            padding: 10px 25px;
+            margin: 0 10px;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            position: relative;
+            font-size: 1.1em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .navbar a:hover {
+            color: #fff;
+            text-shadow: 0 0 8px rgba(102, 192, 244, 0.6);
+        }
+        
+        .navbar a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: width 0.3s ease;
+        }
+        
+        .navbar a:hover::after {
+            width: 70%;
+        }
+        
+        .content {
+            margin: 30px auto;
+            max-width: 1400px;
+            padding: 0 20px;
+        }
+        
+        /* Estilos para el header del perfil */
+        .header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: linear-gradient(135deg, rgba(42, 71, 94, 0.7) 0%, rgba(23, 26, 33, 0.9) 100%);
+            border-radius: 10px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(102, 192, 244, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), #5c16c5, var(--primary));
+        }
+        
+        .avatar {
+            border-radius: 50%;
+            margin-right: 30px;
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border: 3px solid var(--primary);
+            box-shadow: 0 0 15px rgba(102, 192, 244, 0.5);
+            transition: transform 0.3s ease;
+        }
+        
+        .avatar:hover {
+            transform: scale(1.05);
+        }
+        
+        .header h1 {
+            font-size: 2.2em;
+            margin-bottom: 5px;
+            color: #fff;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        .header p {
+            color: var(--accent);
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+        
+        .perfil-link {
+            display: inline-block;
+            padding: 8px 20px;
+            background: rgba(102, 192, 244, 0.2);
+            color: var(--primary);
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            border: 1px solid var(--primary);
+        }
+        
+        .perfil-link:hover {
+            background: var(--primary);
+            color: #1b2838;
+            text-decoration: none;
+            box-shadow: 0 0 15px rgba(102, 192, 244, 0.5);
+        }
+        
+        /* Secciones con efecto neón */
+        .section {
+            background: linear-gradient(145deg, rgba(42, 71, 94, 0.8) 0%, rgba(23, 26, 33, 0.9) 100%);
+            padding: 25px;
+            margin-bottom: 30px;
+            border-radius: 10px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(102, 192, 244, 0.1);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
+        }
+        
+        .section::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), #5c16c5, var(--primary));
+        }
+        
+        .section h2 {
+            color: var(--primary);
+            border-bottom: 1px solid rgba(102, 192, 244, 0.3);
+            padding-bottom: 12px;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            display: flex;
+            align-items: center;
+        }
+        
+        .section h2::before {
+            content: '';
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: var(--primary);
+            border-radius: 50%;
+            margin-right: 10px;
+            box-shadow: 0 0 8px var(--primary);
+        }
+        
+        /* Estilos para los juegos */
+        .juego {
+            display: flex;
+            margin-bottom: 25px;
+            padding: 20px;
+            background: rgba(22, 32, 45, 0.7);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+            position: relative;
+        }
+        
+        .juego:hover {
+            background: rgba(22, 32, 45, 0.9);
+            border-left: 4px solid var(--primary);
+            transform: translateX(5px);
+        }
+        
+        .juego::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, transparent 0%, rgba(102, 192, 244, 0.05) 100%);
+            pointer-events: none;
+        }
+        
+        .juego-imagen {
+            width: 184px;
+            height: 69px;
+            margin-right: 25px;
+            object-fit: cover;
+            border-radius: 4px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease;
+        }
+        
+        .juego:hover .juego-imagen {
+            transform: scale(1.05);
+        }
+        
+        .juego-info {
+            flex: 1;
+        }
+        
+        .juego-info h3 {
+            color: #fff;
+            margin-bottom: 10px;
+            font-size: 1.3em;
+        }
+        
+        .juego-info p {
+            color: var(--accent);
+            margin-bottom: 15px;
+        }
+        
+        /* Logros con efecto hover */
+        .logros {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .logro {
+            background: var(--secondary);
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            transition: all 0.3s ease;
+            cursor: default;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .logro::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .logro:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+        
+        .logro-desbloqueado {
+            background: linear-gradient(135deg, #4e6b1f 0%, #3a5115 100%);
+            color: #d2efa9;
+        }
+        
+        .logro-pendiente {
+            background: linear-gradient(135deg, #6d1f1f 0%, #4d1515 100%);
+            color: #ffb8b8;
+        }
+        
+        /* Información del perfil */
+        .info-perfil {
+            display: flex;
+            margin-top: 20px;
+            background: rgba(23, 26, 33, 0.5);
+            border-radius: 8px;
+            padding: 15px;
+        }
+        
+        .info-columna {
+            flex: 1;
+            padding: 0 15px;
+        }
+        
+        .info-item {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px dashed rgba(102, 192, 244, 0.2);
+        }
+        
+        .info-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .info-label {
+            color: #8F98A0;
+            font-size: 0.9em;
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        .info-valor {
+            font-weight: bold;
+            color: #fff;
+            font-size: 1.1em;
+        }
+        
+        /* Efectos especiales */
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(102, 192, 244, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(102, 192, 244, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(102, 192, 244, 0); }
+        }
+        
+        .pulse-effect {
+            animation: pulse 2s infinite;
+        }
+        
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .navbar a {
+                margin: 5px 0;
+            }
+            
+            .header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .avatar {
+                margin-right: 0;
+                margin-bottom: 20px;
+            }
+            
+            .info-perfil {
+                flex-direction: column;
+            }
+            
+            .info-columna {
+                padding: 0;
+            }
+            
+            .juego {
+                flex-direction: column;
+            }
+            
+            .juego-imagen {
+                margin-right: 0;
+                margin-bottom: 15px;
+                width: 100%;
+                height: auto;
+                max-height: 150px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <a href="{% url 'perfil_completo_async' %}">Perfil</a>
+       
+    </div>
+
+    <div class="content">
+        {% block content %}
+        <!-- El contenido específico de cada página irá aquí -->
+        {% endblock %}
+    </div>
+</body>
+</html>
